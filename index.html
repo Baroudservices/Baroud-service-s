@@ -34,10 +34,12 @@
 
 <script>
   const supabaseClient = supabase.createClient(
-    "https://pqrwitlonhfbfwtsnde.supabase.co",
-    "sb_publishable_l5PtPu6xVyWq2pD6jzEYRw_CYEQ9-f_"
-  );
-
+  "https://pqrwitlonhfbfwtsnde.supabase.co",
+  "sb_publishable_...",
+  {
+    global: { fetch: (...args) => fetch(...args) }
+  }
+);
   const msgEl = document.getElementById("msg");
 
   async function login() {

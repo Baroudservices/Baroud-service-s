@@ -58,10 +58,10 @@
     <input id="email" type="email" placeholder="Email" />
     <input id="password" type="password" placeholder="Password" />
 
-    <button onclick="login()">Login</button>
-    <button onclick="register()">Register</button>
-    <button onclick="testConnection()">Test Connection</button>
-    <p id="msg"></p>
+    <button type="button" onclick="loginUser()">Login</button>
+<button type="button" onclick="registerUser()">Register</button>
+<button type="button" onclick="testConnection()">Test Connection</button>
+<p id="msg"></p>
   </div>
 
     <script>
@@ -71,7 +71,7 @@
   const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
   const msgEl = document.getElementById("msg");
-  msgEl.innerText = "JS Loaded ✅";
+  msgEl.innerText = "JS Loaded ✅ | v10";
 
   function getForm() {
     const email = document.getElementById("email").value.trim();
@@ -80,7 +80,7 @@
   }
 
   async function testConnection() {
-    msgEl.innerText = "Testing connection...";
+    msgEl.innerText = "Testing connection... | v10";
     try {
       const { error } = await supabaseClient.auth.getSession();
       msgEl.innerText = error ? ("Connection error ❌: " + error.message) : "Connected ✅";
@@ -89,8 +89,9 @@
     }
   }
 
-  async function register() {
+  async function registerUser() {
     const { email, password } = getForm();
+
     if (!email || !password) {
       msgEl.innerText = "اكتب Email و Password أولاً";
       return;
@@ -100,30 +101,33 @@
       return;
     }
 
-    msgEl.innerText = "Creating account...";
+    msgEl.innerText = "Registering... | v10";
 
-    // ✅ هذا هو التسجيل الصحيح Email/Password (مش anonymous)
-    const { error } = await supabaseClient.auth.signUp({ email, password });
+    // ✅ تسجيل Email/Password فقط (مش anonymous)
+    const { data, error } = await supabaseClient.auth.signUp({ email, password });
 
-    msgEl.innerText = error
-      ? error.message
-      : "Account created ✅ (check your email)";
+    if (error) {
+      msgEl.innerText = `Register error ❌: ${error.message}`;
+      return;
+    }
+
+    msgEl.innerText = "Account created ✅ (check your email)";
   }
 
-  async function login() {
+  async function loginUser() {
     const { email, password } = getForm();
+
     if (!email || !password) {
       msgEl.innerText = "اكتب Email و Password أولاً";
       return;
     }
 
-    msgEl.innerText = "Logging in...";
+    msgEl.innerText = "Logging in... | v10";
 
-      const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+    const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
 
-    msgEl.innerText = error ? error.message : "Logged in ✅";
+    msgEl.innerText = error ? ("Login error ❌: " + error.message) : "Logged in ✅";
   }
 </script>
-
 </body>
 </html>

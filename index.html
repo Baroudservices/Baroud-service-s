@@ -1,1 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Baroud Services</title>
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <style>
+    body { font-family: system-ui; margin:0; background:#f6f6f6 }
+    .box { max-width:420px; margin:40px auto; background:#fff; padding:20px; border-radius:16px }
+    button, input { width:100%; padding:12px; margin-top:10px }
+  </style>
+</head>
+<body>
 
+<div class="box">
+  <h2>Baroud Services</h2>
+  <p>خدمات — Services</p>
+
+  <a href="https://wa.me/96170385398" target="_blank">
+    <button>WhatsApp</button>
+  </a>
+
+  <hr>
+
+  <input id="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password">
+
+  <button onclick="login()">Login</button>
+  <button onclick="register()">Register</button>
+
+  <p id="msg"></p>
+</div>
+
+<script>
+  const supabaseClient = supabase.createClient(
+    "https://pqrwitlonhfbfwtsnde.supabase.co",
+    "sb_publishable_l5PtPu6xVyWq2pD6jzEYRw_CYEQ9-f_"
+  );
+
+  const msgEl = document.getElementById("msg");
+
+  async function login() {
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+
+    const { error } = await supabaseClient.auth.signInWithPassword({
+      email: email,
+      password: password
+    });
+
+    msgEl.innerText = error ? error.message : "Logged in ✅";
+  }
+
+  async function register() {
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+
+    const { error } = await supabaseClient.auth.signUp({
+      email: email,
+      password: password
+    });
+
+    msgEl.innerText = error ? error.message : "Account created ✅ (Check email if confirmation is on)";
+  }
+</script>
+
+</body>
+</html>

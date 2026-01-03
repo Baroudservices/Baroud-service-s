@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Binance - Add Credit</title>
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <style>
+    body{font-family:system-ui;background:#0f172a;color:#fff;margin:0;padding:20px}
+    .card{background:#020617;padding:20px;border-radius:16px}
+    input,button{width:100%;padding:14px;margin-top:10px;border-radius:10px;border:0;font-size:16px}
+    input{background:#111827;color:#fff;border:1px solid #1f2937}
+    button{background:#1f2937;color:#fff;cursor:pointer}
+    .back{background:#111827}
+    #msg{margin-top:12px;font-weight:700}
+  </style>
+</head>
+<body>
+
+<button class="back" onclick="back()">⬅ رجوع</button>
+<h2>Binance - تعبئة حساب</h2>
+
+<div class="card">
+  <input id="amount" type="number" placeholder="المبلغ" />
+  <input id="note" type="text" placeholder="ملاحظة (اختياري)" />
+  <button onclick="send()">إرسال الطلب</button>
+  <p id="msg"></p>
+</div>
+
+<script>
+  const SUPABASE_URL = "https://pqrwitolonhfbfwtsnde.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_l5PtPu6xVyWq2pD6jzEYRw_CYEQ9-f_";
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  async function guard(){
+    const { data } = await supabase.auth.getSession();
+    if(!data.session) window.location.href = "index.html";
+  }
+
+  function back(){ window.location.href = "add-credit.html"; }
+
+  async function send(){
+    const msg = document.getElementById("msg");
+    msg.innerText = "جاري الإرسال...";
+    const amount = document.getElementById("amount").value;
+    const note = document.getElementById("note").value;
+
+    if(!amount){ msg.innerText = "اكتب المبلغ"; return; }
+
+    // هون بدنا نقرر وين يروح الطلب (واتساب أو قاعدة بيانات)
+    // حالياً: واتساب مباشر
+    const text = encodeURIComponent(`طلب تعبئة Binance\nالمبلغ: ${amount}\nملاحظة: ${note}`);
+    window.open(`https://wa.me/96170385398?text=${text}`, "_blank");
+    msg.innerText = "تم فتح واتساب ✅";
+  }
+
+  guard();
+</script>
+</body>
+</html>

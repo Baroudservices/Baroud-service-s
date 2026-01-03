@@ -8,6 +8,21 @@
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
   <style>
+    #addCreditBtn {
+  position: fixed;
+  top: 14px;
+  left: 14px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  font-size: 28px;
+  font-weight: bold;
+  border: none;
+  background: #111;
+  color: #fff;
+  cursor: pointer;
+  z-index: 999;
+}
     body { font-family: system-ui, -apple-system, sans-serif; background:#f6f6f6; margin:0; padding:0; }
     .box { max-width:420px; margin:40px auto; background:#fff; padding:20px; border-radius:16px; box-shadow:0 4px 10px rgba(0,0,0,0.05); }
     button { width:100%; padding:12px; margin-top:10px; font-size:16px; cursor:pointer; }
@@ -16,6 +31,8 @@
   </style>
 </head>
 <body>
+  <!-- زر + لتعبئة الحساب -->
+<button id="addCreditBtn" onclick="goToAddCredit()">+</button>
   <div class="box">
     <h2>Baroud Services</h2>
     <div id="welcome">...</div>
@@ -34,31 +51,34 @@
   </div>
 
   <script>
-    const SUPABASE_URL = "https://pqrwitolonhfbfwtsnde.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_l5PtPu6xVyWq2pD6jzEYRw_CYEQ9-f_";
-    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  const SUPABASE_URL = "https://pqrwitolonhfbfwtsnde.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_l5PtPu6xVyWq2pD6jzEYRw_CYEQ9-f_";
+  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    const welcomeEl = document.getElementById("welcome");
-    const msgEl = document.getElementById("msg");
+  const welcomeEl = document.getElementById("welcome");
+  const msgEl = document.getElementById("msg");
 
-    async function logoutUser() {
-      await supabaseClient.auth.signOut();
+  async function logoutUser() {
+    await supabaseClient.auth.signOut();
+    window.location.href = "index.html";
+  }
+
+  async function guard() {
+    const { data, error } = await supabaseClient.auth.getSession();
+    const user = data?.session?.user;
+
+    if (!user) {
       window.location.href = "index.html";
+      return;
     }
 
-    // ✅ حماية الصفحة: إذا مش عامل Login رجّعه على index
-    (async function guard() {
-      const { data } = await supabaseClient.auth.getSession();
-      const user = data?.session?.user;
+    welcomeEl.innerText = `أهلاً ${user.email}`;
+    msgEl.innerText = "Ready ✅";
+  }
 
-      if (!user) {
-        window.location.href = "index.html";
-        return;
-      }
+  function goToAddCredit() {
+    window.location.href = "add-credit.html";
+  }
 
-      welcomeEl.innerText = `أهلاً ${user.email}`;
-      msgEl.innerText = "Ready ✅";
-    })();
-  </script>
-</body>
-</html>
+  guard();
+</script>

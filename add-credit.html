@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Add Credit - Baroud</title>
+
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      background: #0f172a;
+      color: white;
+      margin: 0;
+      padding: 20px;
+    }
+    .card {
+      background: #020617;
+      padding: 20px;
+      border-radius: 16px;
+    }
+    button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 10px;
+      font-size: 16px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+    }
+    .back {
+      background: #111827;
+      color: white;
+    }
+    .item {
+      background: #1f2933;
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+
+  <button class="back" onclick="goBack()">⬅ رجوع</button>
+
+  <h2>Add Credit Section</h2>
+
+  <div class="card">
+    <button class="item">Wish Money</button>
+    <button class="item">Binance</button>
+    <button class="item">USDT BEP20</button>
+    <button class="item">USDT TRC20</button>
+    <button class="item">OMT Pay</button>
+  </div>
+
+<script>
+  const SUPABASE_URL = "https://pqrwitolonhfbfwtsnde.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_l5PtPu6xVyWq2pD6jzEYRw_CYEQ9-f_";
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  async function guard() {
+    const { data } = await supabase.auth.getSession();
+    if (!data.session) {
+      window.location.href = "index.html";
+    }
+  }
+
+  function goBack() {
+    window.location.href = "services.html";
+  }
+
+  guard();
+</script>
+
+</body>
+</html>

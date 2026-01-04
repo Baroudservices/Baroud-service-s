@@ -1,116 +1,100 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Add Credit</title>
 
   <style>
     body {
-      font-family: system-ui, sans-serif;
-      background: #0f172a;
-      color: #fff;
       margin: 0;
       padding: 20px;
-    }
-
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
+      font-family: system-ui, sans-serif;
+      background: linear-gradient(180deg, #0a1020, #0e1a2f);
+      color: white;
     }
 
     .back {
-      background: #111827;
-      border: none;
-      color: #fff;
-      padding: 10px 16px;
-      border-radius: 10px;
       cursor: pointer;
+      font-size: 18px;
       margin-bottom: 20px;
     }
 
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
     .card {
-      background: #020617;
+      background: #111b2e;
       border-radius: 20px;
       padding: 20px;
-      max-width: 420px;
-      margin: auto;
     }
 
     .item {
       width: 100%;
-      background: #1f2933;
+      background: #1a2438;
       border: none;
-      color: #fff;
-      padding: 14px;
-      margin-bottom: 12px;
       border-radius: 14px;
-      font-size: 16px;
-      cursor: pointer;
+      padding: 16px;
+      margin-bottom: 12px;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
     }
 
-    .item:hover {
-      background: #334155;
-    }
-
-    .icon-img {
-      width: 26px;
-      height: 26px;
+    .item img {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
     }
   </style>
 </head>
-
 <body>
 
-  <button class="back" onclick="goBack()">← رجوع</button>
-  <h2>Add Credit Section</h2>
+  <div class="back" onclick="goHome()">← رجوع</div>
+
+  <h1>Add Credit Section</h1>
 
   <div class="card">
     <button class="item" onclick="go('binance.html')">
-      <img src="./assets/binance.png" class="icon-img">
+      <img src="assets/binance.png">
       Binance
     </button>
 
     <button class="item" onclick="go('wish.html')">
-      <img src="./assets/wish.png" class="icon-img">
+      <img src="assets/wish.png">
       Whish Money
     </button>
 
     <button class="item" onclick="go('usdt-bep20.html')">
-      <img src="./assets/usdt-bep20.png" class="icon-img">
+      <img src="assets/usdt-bep20.png">
       USDT BEP20
     </button>
 
     <button class="item" onclick="go('usdt-trc20.html')">
-      <img src="./assets/usdt-trc20.png" class="icon-img">
+      <img src="assets/usdt-trc20.png">
       USDT TRC20
     </button>
 
     <button class="item" onclick="go('omt.html')">
-      <img src="./assets/omt.png" class="icon-img">
+      <img src="assets/omt.png">
       OMT Pay
     </button>
   </div>
 
   <script>
+    const BASE = "https://baroudservices.github.io/Baroud-service-s/";
+
     function go(page) {
-      // يفتح الصفحة من نفس مجلد add-credit.html
-      const base = window.location.href.substring(
-        0,
-        window.location.href.lastIndexOf('/') + 1
-      );
-      window.location.href = base + page;
+      window.location.href = BASE + page;
     }
 
-    function goBack() {
-      const base = window.location.href.substring(
-        0,
-        window.location.href.lastIndexOf('/') + 1
-      );
-      window.location.href = base + 'services.html';
+    function goHome() {
+      window.location.href = BASE + "home.html";
     }
   </script>
 

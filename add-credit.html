@@ -2,96 +2,145 @@
 <html lang="ar">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Add Credit - Baroud</title>
 
+  <!-- Supabase JS -->
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
   <style>
-    .icon-img{
-  width:26px;
-  height:26px;
-  margin-right:12px;
-  vertical-align:middle;
-}
-    body {
+    body{
       font-family: system-ui, sans-serif;
-      background: #0f172a;
-      color: white;
-      margin: 0;
-      padding: 20px;
+      background:#0f172a;
+      color:white;
+      margin:0;
+      padding:20px;
+      min-height:100vh;
     }
-    .card {
-      background: #020617;
-      padding: 20px;
-      border-radius: 16px;
+
+    .back{
+      background:#111827;
+      color:white;
+      border:none;
+      padding:10px 14px;
+      border-radius:10px;
+      cursor:pointer;
     }
-    button {
-      width: 100%;
-      padding: 14px;
-      margin-top: 10px;
-      font-size: 16px;
-      border-radius: 10px;
-      border: none;
-      cursor: pointer;
+
+    h2{
+      margin-top:14px;
+      font-size:28px;
+      font-weight:800;
     }
-    .back {
-      background: #111827;
-      color: white;
+
+    .card{
+      background:#020617;
+      padding:22px;
+      border-radius:18px;
+      margin-top:20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
     }
-    .item {
-      background: #1f2933;
-      color: white;
+
+    .item{
+      width:100%;
+      padding:14px;
+      margin-top:12px;
+      font-size:16px;
+      border-radius:14px;
+      border:none;
+      cursor:pointer;
+      background:#1f2933;
+      color:#fff;
+
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
+    }
+
+    .icon-img{
+      width:26px;
+      height:26px;
+      border-radius:8px;
+      object-fit:cover;
+    }
+
+    .hint{
+      margin-top:14px;
+      color:#9ca3af;
+      font-size:14px;
     }
   </style>
 </head>
 
 <body>
 
-  <button class="back" onclick="goBack()">⬅ رجوع</button>
+  <button class="back" onclick="goBack()">← رجوع</button>
 
   <h2>Add Credit Section</h2>
 
-<div class="card">
-  <button class="item" onclick="go('binance.html')">
-  <img src="./assets/binance.png" class="icon-img">
-  Binance
-</button>
+  <div class="card">
 
-<button class="item" onclick="go('wish.html')">
-  <img src="./assets/wish.png" class="icon-img">
-  Whish Money
-</button>
+    <button class="item" onclick="go('binance.html')">
+      <img src="./assets/binance.png" class="icon-img" alt="Binance">
+      Binance
+    </button>
 
-<button class="item" onclick="go('usdt-bep20.html')">
-  <img src="./assets/usdt-bep20.png" class="icon-img">
-  USDT BEP20
-</button>
+    <button class="item" onclick="go('wish.html')">
+      <img src="./assets/wish.png" class="icon-img" alt="Wish">
+      Whish Money
+    </button>
 
-<button class="item" onclick="go('usdt-trc20.html')">
-  <img src="./assets/usdt-trc20.png" class="icon-img">
-  USDT TRC20
-</button>
+    <button class="item" onclick="go('usdt-bep20.html')">
+      <img src="./assets/usdt-bep20.png" class="icon-img" alt="USDT BEP20">
+      USDT BEP20
+    </button>
 
-<button class="item" onclick="go('omt.html')">
-  <img src="./assets/omt.png" class="icon-img">
-  OMT Pay
-</button>
-</div>
+    <button class="item" onclick="go('usdt-trc20.html')">
+      <img src="./assets/usdt-trc20.png" class="icon-img" alt="USDT TRC20">
+      USDT TRC20
+    </button>
 
-<script>
-  // يفتح الصفحة من نفس فولدر add-credit.html (مضمون)
-  function go(page) {
-    alert("Going to: " + (base + page));
-    const base = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
-    window.location.href = base + page;
-  }
+    <button class="item" onclick="go('omt.html')">
+      <img src="./assets/omt.png" class="icon-img" alt="OMT">
+      OMT Pay
+    </button>
 
-  function goBack() {
-    const base = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
-    window.location.href = base + "services.html";
-  }
-</script>
-  guard();
+    <div class="hint">Ready ✅</div>
+  </div>
+
+  <script>
+    // ✅ Your Supabase project
+    const SUPABASE_URL = "https://pqrwitolonhfbfwtsnde.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_l5PtPu6xVyWq2pD6jzEYRw_CYEQ9-f_";
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    async function guard() {
+      try {
+        const { data, error } = await supabase.auth.getSession();
+        if (error) console.log(error);
+
+        if (!data || !data.session) {
+          window.location.href = "index.html";
+        }
+      } catch (e) {
+        console.log("guard error:", e);
+        window.location.href = "index.html";
+      }
+    }
+
+    function go(page) {
+      // ✅ مهم: خليها relative بدون /Baroud-service-s/
+      window.location.href = page;
+    }
+
+    function goBack() {
+      window.location.href = "services.html";
+    }
+
+    // ✅ تشغيل الحماية
+    guard();
+  </script>
+
 </body>
 </html>

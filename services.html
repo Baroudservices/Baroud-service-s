@@ -1,64 +1,65 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Services - Baroud</title>
+
+  <!-- منع الكاش -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
 
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
   <style>
-    body {
+    body{
       font-family: system-ui, sans-serif;
-      background: #f6f6f6;
-      margin: 0;
-      padding: 0;
+      background:#f6f6f6;
+      margin:0;
+      padding:0;
     }
-
-    .box {
-      width: 90%;
-      max-width: 420px;
-      margin: 40px auto;
-      background: white;
-      padding: 20px;
-      border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(0,0,0,.1);
-      text-align: center;
+    .box{
+      width:90%;
+      max-width:420px;
+      margin:40px auto;
+      background:white;
+      padding:20px;
+      border-radius:16px;
+      box-shadow:0 10px 30px rgba(0,0,0,.1);
+      text-align:center;
     }
-
-    button {
-      width: 100%;
-      padding: 14px;
-      margin-top: 10px;
-      font-size: 16px;
-      border-radius: 10px;
-      border: none;
-      cursor: pointer;
-      background: #eee;
+    button{
+      width:100%;
+      padding:14px;
+      margin-top:10px;
+      font-size:16px;
+      border-radius:10px;
+      border:none;
+      cursor:pointer;
+      background:#eee;
     }
-
-    #addCreditBtn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      font-size: 28px;
-      background: black;
-      color: white;
+    #addCreditBtn{
+      position:fixed;
+      bottom:20px;
+      right:20px;
+      width:56px;
+      height:56px;
+      border-radius:50%;
+      font-size:28px;
+      background:black;
+      color:white;
     }
-
-    #msg {
-      margin-top: 10px;
-      font-weight: bold;
+    #msg{
+      margin-top:10px;
+      font-weight:bold;
     }
   </style>
 </head>
 
 <body>
 
-<button id="addCreditBtn" onclick="goToAddCredit()">+</button>
+<button id="addCreditBtn" onclick="go('add-credit.html')">+</button>
 
 <div class="box">
   <h2>Baroud Services</h2>
@@ -70,14 +71,12 @@
 
   <button onclick="alert('Service 1')">Service 1</button>
   <button onclick="alert('Service 2')">Service 2</button>
-  <button onclick="logoutUser()">Logout</button>
+  <button onclick="logout()">Logout</button>
 
   <div id="msg"></div>
 </div>
 
 <script>
-  const BASE = "https://baroudservices.github.io/Baroud-service-s/";
-
   const supabase = window.supabase.createClient(
     "https://pqrwitolonhfbfwtsnde.supabase.co",
     "sb_publishable_l5PtPu6xVyWq2pD6jzEYRw_CYEQ9-f_"
@@ -86,27 +85,23 @@
   const welcomeEl = document.getElementById("welcome");
   const msgEl = document.getElementById("msg");
 
-  async function guard() {
+  async function guard(){
     const { data } = await supabase.auth.getSession();
-    const user = data?.session?.user;
-
-    // ✅ فقط إذا مش مسجّل دخول
-    if (!user) {
-      window.location.href = BASE + "index.html";
+    if(!data.session){
+      window.location.replace("index.html");
       return;
     }
-
-    welcomeEl.innerText = `أهلاً ${user.email}`;
+    welcomeEl.innerText = "أهلاً " + data.session.user.email;
     msgEl.innerText = "Ready ✅";
   }
 
-  async function logoutUser() {
+  async function logout(){
     await supabase.auth.signOut();
-    window.location.href = BASE + "index.html";
+    window.location.replace("index.html");
   }
 
-  function goToAddCredit() {
-    window.location.href = BASE + "add-credit.html";
+  function go(page){
+    window.location.replace(page + "?v=" + Date.now());
   }
 
   guard();

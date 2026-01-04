@@ -48,26 +48,15 @@
 
 <div class="card">
   <button class="item" onclick="go('binance.html')">Binance</button>
-  <button class="item" onclick="go('wish.html')">Whish Money</button>>
+  <button class="item" onclick="go('wish.html')">Whish Money</button>
   <button class="item" onclick="go('usdt-bep20.html')">USDT BEP20</button>
   <button class="item" onclick="go('usdt-trc20.html')">USDT TRC20</button>
   <button class="item" onclick="go('omt.html')">OMT Pay</button>
 </div>
+
 <script>
-  const SUPABASE_URL = "https://pqrwitolonhfbfwtsnde.supabase.co";
-  const SUPABASE_KEY = "sb_publishable_XXXXXXXXXXXX"; // متل ما هو عندك
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-  async function guard() {
-    const { data } = await supabase.auth.getSession();
-    if (!data.session) {
-      window.location.href = "index.html";
-    }
-  }
-
-  <script>
+  // يفتح الصفحة من نفس فولدر add-credit.html (مضمون)
   function go(page) {
-    // ياخد المسار الحالي تبع add-credit.html ويضيف عليه اسم الصفحة المطلوبة
     const base = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
     window.location.href = base + page;
   }
@@ -78,6 +67,5 @@
   }
 </script>
   guard();
-</script>
 </body>
 </html>

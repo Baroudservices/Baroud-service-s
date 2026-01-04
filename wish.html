@@ -194,13 +194,33 @@
     document.getElementById("receipt").value = "";
   }
 
-  function goBack(){
-    const base = window.location.href.substring(
-      0,
-      window.location.href.lastIndexOf('/') + 1
-    );
-    window.location.href = base + "add-credit.html";
-  }
+  <script>
+function goBack(){
+  // 1) نفس الفولدر
+  const try1 = "./add-credit.html";
+
+  // 2) إذا GitHub Pages على مسار مشروع (اسم الريبو)
+  const repoName = window.location.pathname.split("/")[1]; // مثال: Baroud-service-s
+  const try2 = `/${repoName}/add-credit.html`;
+
+  // جرّب الأول
+  window.location.href = try1;
+
+  // إذا ما فتح خلال لحظة، جرّب الثاني
+  setTimeout(() => {
+    // إذا بعدنا بنفس الصفحة (يعني ما تغيّر)
+    if (window.location.href.includes("wish.html")) {
+      window.location.href = try2;
+    }
+  }, 200);
+
+  // إذا بعد كمان ما زبط، رجّع history
+  setTimeout(() => {
+    if (window.location.href.includes("wish.html")) {
+      history.back();
+    }
+  }, 600);
+}
 </script>
 
 </body>

@@ -3,98 +3,144 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Add Credit</title>
+  <title>Add Credit - Baroud</title>
 
   <style>
-    body {
-      margin: 0;
-      padding: 20px;
-      font-family: system-ui, sans-serif;
-      background: linear-gradient(180deg, #0a1020, #0e1a2f);
-      color: white;
+    :root{
+      --bg1:#0b1220;
+      --bg2:#050914;
+      --card:rgba(255,255,255,.06);
+      --card2:rgba(255,255,255,.10);
+      --text:#ffffff;
+      --muted:#b8c3d9;
+      --radius:22px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      background:linear-gradient(180deg,var(--bg1),var(--bg2));
+      color:var(--text);
+      min-height:100vh;
+      padding:18px;
+    }
+    .top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:18px;
+    }
+    .backTxt{
+      cursor:pointer;
+      color:#fff;
+      opacity:.9;
+      font-weight:600;
+      user-select:none;
+    }
+    .title{
+      margin:0 0 14px 0;
+      font-size:32px;
+      letter-spacing:.2px;
+      text-align:center;
     }
 
-    .back {
-      cursor: pointer;
-      font-size: 18px;
-      margin-bottom: 20px;
+    .wrap{
+      max-width:520px;
+      margin:0 auto;
+      padding:18px;
+      border-radius:28px;
+      background:rgba(0,0,0,.25);
+      box-shadow:0 10px 35px rgba(0,0,0,.35);
     }
 
-    h1 {
-      text-align: center;
-      margin-bottom: 30px;
+    .item{
+      width:100%;
+      display:flex;
+      align-items:center;
+      gap:14px;
+      border:none;
+      cursor:pointer;
+      padding:18px 18px;
+      border-radius:18px;
+      background:rgba(255,255,255,.10);
+      color:#fff;
+      font-size:18px;
+      font-weight:700;
+      margin:14px 0;
+      transition:.15s;
+    }
+    .item:active{transform:scale(.99)}
+    .icon{
+      width:44px;
+      height:44px;
+      border-radius:14px;
+      background:rgba(255,255,255,.08);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      flex:0 0 44px;
+    }
+    .icon img{
+      width:30px;height:30px;object-fit:contain;
+    }
+    .label{
+      text-align:left;
+      flex:1;
     }
 
-    .card {
-      background: #111b2e;
-      border-radius: 20px;
-      padding: 20px;
-    }
-
-    .item {
-      width: 100%;
-      background: #1a2438;
-      border: none;
-      border-radius: 14px;
-      padding: 16px;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    .item img {
-      width: 32px;
-      height: 32px;
-      object-fit: contain;
+    .footer{
+      text-align:center;
+      margin-top:22px;
+      color:#8ea0c4;
+      font-size:13px;
+      opacity:.9;
     }
   </style>
 </head>
+
 <body>
 
-  <div class="back" onclick="goHome()">← رجوع</div>
+  <div class="top">
+    <div class="backTxt" onclick="go('services.html')">رجوع ←</div>
+    <div style="width:60px"></div>
+  </div>
 
-  <h1>Add Credit Section</h1>
+  <div class="wrap">
+    <h1 class="title">Add Credit Section</h1>
 
-  <div class="card">
     <button class="item" onclick="go('binance.html')">
-      <img src="assets/binance.png">
-      Binance
+      <div class="icon"><img src="assets/binance.png" alt="binance"></div>
+      <div class="label">Binance</div>
     </button>
 
     <button class="item" onclick="go('wish.html')">
-      <img src="assets/wish.png">
-      Whish Money
+      <div class="icon"><img src="assets/wish.png" alt="wish"></div>
+      <div class="label">Whish Money</div>
     </button>
 
     <button class="item" onclick="go('usdt-bep20.html')">
-      <img src="assets/usdt-bep20.png">
-      USDT BEP20
+      <div class="icon"><img src="assets/usdt-bep20.png" alt="bep20"></div>
+      <div class="label">USDT BEP20</div>
     </button>
 
     <button class="item" onclick="go('usdt-trc20.html')">
-      <img src="assets/usdt-trc20.png">
-      USDT TRC20
+      <div class="icon"><img src="assets/usdt-trc20.png" alt="trc20"></div>
+      <div class="label">USDT TRC20</div>
     </button>
 
     <button class="item" onclick="go('omt.html')">
-      <img src="assets/omt.png">
-      OMT Pay
+      <div class="icon"><img src="assets/omt.png" alt="omt"></div>
+      <div class="label">OMT Pay</div>
     </button>
+
+    <div class="footer">© 2024 Baroud Services</div>
   </div>
 
   <script>
-    const BASE = "https://baroudservices.github.io/Baroud-service-s/";
-
-    function go(page) {
-      window.location.href = BASE + page;
-    }
-
-    function goHome() {
-      window.location.href = BASE + "home.html";
+    // تنقّل مضبوط على GitHub Pages (بيشتغل سواء بالمجلّد أو بالروت)
+    function go(page){
+      window.location.href = new URL(page, window.location.href).href;
     }
   </script>
 

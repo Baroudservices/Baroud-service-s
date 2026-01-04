@@ -2,115 +2,160 @@
 <html lang="ar">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Baroud Services</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Services - Baroud</title>
+
+  <!-- منع الكاش قد ما فينا -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
 
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
   <style>
     body{
+      font-family: system-ui, -apple-system, sans-serif;
+      background:#0b1220;
       margin:0;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
-      background:linear-gradient(180deg,#0b1220,#050914);
+      padding:0;
       color:#fff;
-      min-height:100vh;
-      padding:16px;
     }
-    .top{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      margin-bottom:16px;
+    .box{
+      width:92%;
+      max-width:420px;
+      margin:40px auto;
+      background:rgba(255,255,255,0.06);
+      padding:22px;
+      border-radius:22px;
+      box-shadow: 0 18px 60px rgba(0,0,0,0.35);
+      text-align:center;
+      backdrop-filter: blur(10px);
     }
-    .icon{
-      width:44px;height:44px;border-radius:16px;
-      background:rgba(255,255,255,.08);
-      display:flex;align-items:center;justify-content:center;
-      font-size:20px;cursor:pointer;user-select:none;
-    }
-    h1{margin:6px 0 18px;text-align:center;font-size:28px}
-    .card{
-      max-width:520px;margin:0 auto;
-      background:rgba(255,255,255,.06);
-      border-radius:22px;padding:18px;
-    }
-    .item{
+    h2{margin:10px 0 18px;font-size:30px;}
+    button{
       width:100%;
       padding:16px;
       margin-top:12px;
-      border:none;
+      font-size:18px;
       border-radius:16px;
-      font-size:16px;
-      background:rgba(255,255,255,.10);
-      color:#fff;
+      border:none;
       cursor:pointer;
+      background:rgba(255,255,255,0.12);
+      color:#fff;
     }
-    .footer{
-      text-align:center;
-      color:#8ea0c4;
-      margin-top:18px;
-      font-size:13px;
-      opacity:.9;
+    button:active{transform:scale(.99)}
+    .small{opacity:.8;margin-top:12px;font-weight:600}
+
+    /* زر + */
+    #addCreditBtn{
+      position:fixed;
+      right:18px;
+      bottom:18px;
+      width:60px;
+      height:60px;
+      border-radius:50%;
+      font-size:32px;
+      font-weight:900;
+      background:#111827;
+      color:#fff;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.45);
+      z-index:999;
     }
+    /* زر تحديث */
+    #refreshBtn{
+      position:fixed;
+      left:18px;
+      bottom:18px;
+      width:60px;
+      height:60px;
+      border-radius:50%;
+      font-size:22px;
+      font-weight:900;
+      background:#111827;
+      color:#fff;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.45);
+      z-index:999;
+    }
+    a{color:inherit;text-decoration:none}
   </style>
 </head>
 
 <body>
 
-  <div class="top">
-    <div class="icon" onclick="logout()">⎋</div>
-    <div class="icon" onclick="go('add-credit.html')">➕</div>
+  <!-- زر تحديث (بيكسر الكاش) -->
+  <button id="refreshBtn" title="Refresh" onclick="hardRefresh()">↻</button>
+
+  <!-- زر اضافة كريدت -->
+  <button id="addCreditBtn" onclick="go('add-credit.html')">+</button>
+
+  <div class="box">
+    <h2>Baroud Services</h2>
+
+    <div id="welcome">...</div>
+
+    <a href="https://wa.me/96170385398" target="_blank" rel="noreferrer">
+      <button type="button">WhatsApp</button>
+    </a>
+
+    <button type="button" onclick="alert('Service 1')">Service 1</button>
+    <button type="button" onclick="alert('Service 2')">Service 2</button>
+
+    <button type="button" onclick="logoutUser()">Logout</button>
+
+    <div id="msg" class="small"></div>
   </div>
 
-  <h1>Baroud Services</h1>
+  <script>
+    // ✅ حط رابط مشروعك هون (بدون تغيير)
+    const BASE = "https://baroudservices.github.io/Baroud-service-s/";
 
-  <div class="card">
-    <button class="item" onclick="openWhats()">WhatsApp</button>
-    <button class="item" onclick="alert('Service 1')">Service 1</button>
-    <button class="item" onclick="alert('Service 2')">Service 2</button>
-    <button class="item" onclick="go('add-credit.html')">Add Credit</button>
-    <button class="item" onclick="logout()">Logout</button>
-  </div>
+    const supabase = window.supabase.createClient(
+      "https://pqrwitolonhfbfwtsnde.supabase.co",
+      "sb_publishable_l5PtPu6xVyWq2pD6jzEYRw_CYEQ9-f_"
+    );
 
-  <div class="footer">Ready ✅</div>
+    // ✅ كسر كاش تلقائي: أول ما تفتح services.html إذا ما في v رح يضيفها ويعمل replace
+    (function forceFresh() {
+      const url = new URL(window.location.href);
+      if (!url.searchParams.has("v")) {
+        url.searchParams.set("v", Date.now().toString());
+        window.location.replace(url.toString());
+      }
+    })();
 
-<script>
-  // ✅ BASE ديناميكي: نفس الدومين + نفس اسم الريبو + نفس الفولدر
-  function getBase(){
-    // مثال pathname: /Baroud-service-s/services.html
-    const parts = window.location.pathname.split("/").filter(Boolean);
-    const repo = parts.length ? parts[0] : "";
-    return window.location.origin + (repo ? ("/" + repo + "/") : "/");
-  }
+    const welcomeEl = document.getElementById("welcome");
+    const msgEl = document.getElementById("msg");
 
-  function go(page){
-    const url = getBase() + page + "?v=" + Date.now();
-    window.location.replace(url);
-  }
-
-  function openWhats(){
-    window.open("https://wa.me/96170385398","_blank");
-  }
-
-  const supabase = window.supabase.createClient(
-    "https://pqrwitolonhfbfwtsnde.supabase.co",
-    "sb_publishable_l5PtPu6xVyWq2pD6jzEYRw_CYEQ9-f_"
-  );
-
-  async function logout(){
-    await supabase.auth.signOut();
-    go("index.html");
-  }
-
-  async function guard(){
-    const { data } = await supabase.auth.getSession();
-    if(!data.session){
-      go("index.html");
+    async function guard() {
+      const { data } = await supabase.auth.getSession();
+      const user = data?.session?.user;
+      if (!user) {
+        // رجّع على تسجيل الدخول مع كسر كاش
+        window.location.replace(BASE + "index.html?v=" + Date.now());
+        return;
+      }
+      welcomeEl.innerText = "أهلاً " + (user.email || "");
+      msgEl.innerText = "Ready ✅";
     }
-  }
 
-  guard();
-</script>
+    async function logoutUser() {
+      await supabase.auth.signOut();
+      window.location.replace(BASE + "index.html?v=" + Date.now());
+    }
+
+    // ✅ تنقل بين الصفحات مع v=timestamp حتى ما يرجعلك نسخة قديمة
+    function go(page) {
+      window.location.assign(BASE + page + "?v=" + Date.now());
+    }
+
+    // ✅ زر refresh جذري
+    function hardRefresh() {
+      // بيغير v ويعمل replace
+      window.location.replace(BASE + "services.html?v=" + Date.now());
+    }
+
+    guard();
+  </script>
 
 </body>
 </html>

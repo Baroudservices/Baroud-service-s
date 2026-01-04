@@ -2,226 +2,103 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Whish Money</title>
-
-  <!-- Supabase -->
-  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
   <style>
     body {
       margin: 0;
-      font-family: system-ui, sans-serif;
-      background: linear-gradient(180deg, #0b1220, #0e1a33);
-      color: #fff;
       padding: 20px;
+      font-family: system-ui, sans-serif;
+      background: linear-gradient(180deg, #0a1020, #0e1a2f);
+      color: white;
     }
 
     .top {
       display: flex;
       justify-content: space-between;
-      align-items: center;
       margin-bottom: 20px;
     }
 
-    .icon {
-      width: 42px;
-      height: 42px;
-      border-radius: 14px;
-      background: rgba(255,255,255,0.1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .back {
       cursor: pointer;
-      font-size: 20px;
+      font-size: 18px;
     }
 
     h1 {
-      margin: 10px 0 20px;
+      margin-bottom: 20px;
     }
 
     .card {
-      background: rgba(255,255,255,0.06);
+      background: #111b2e;
       border-radius: 20px;
       padding: 20px;
     }
 
-    .label {
-      opacity: 0.8;
-      margin-top: 12px;
-    }
-
     .number {
-      background: rgba(255,255,255,0.1);
-      padding: 12px;
+      background: #1a2438;
+      padding: 14px;
       border-radius: 12px;
       text-align: center;
       font-weight: bold;
-      margin-top: 8px;
+      margin: 10px 0;
     }
 
-    input[type="number"],
-    input[type="file"] {
+    input, button {
       width: 100%;
       padding: 14px;
-      border-radius: 14px;
-      border: none;
       margin-top: 12px;
+      border-radius: 12px;
+      border: none;
       font-size: 16px;
     }
 
     button {
-      width: 100%;
-      padding: 16px;
-      margin-top: 18px;
-      border-radius: 16px;
-      border: none;
-      font-size: 16px;
-      font-weight: bold;
       background: linear-gradient(90deg, #00c6ff, #0072ff);
-      color: #fff;
+      color: white;
+      font-weight: bold;
       cursor: pointer;
     }
 
-    .msg {
-      margin-top: 14px;
-      text-align: center;
-    }
-
-    .err {
-      color: #ff6b6b;
-    }
-
-    .ok {
-      color: #4cd964;
-    }
-
     .footer {
+      margin-top: 20px;
       text-align: center;
       opacity: 0.6;
-      margin-top: 30px;
       font-size: 13px;
     }
   </style>
 </head>
-
 <body>
 
   <div class="top">
-    <div class="icon" onclick="goBack()">←</div>
-    <div class="icon" onclick="goBack()">☰</div>
+    <div class="back" onclick="goBack()">← رجوع</div>
   </div>
 
   <h1>Whish Money $</h1>
 
   <div class="card">
-    <div class="label">Please send the amount to this number ID:</div>
+    <div>Please send the amount to this number ID:</div>
     <div class="number">+961 8181 2024</div>
 
-    <div class="label">The minimum deposit is <b>10$</b></div>
-    <div class="label">It takes between 1 & 20 minutes</div>
+    <div>The minimum deposit is 10$</div>
+    <div>It takes between 1 & 20 minutes</div>
 
-    <input id="amount" type="number" placeholder="Enter amount $" min="10"/>
-    <input id="receipt" type="file" accept="image/*"/>
+    <input type="number" placeholder="Enter amount $">
+    <input type="file" accept="image/*">
 
-    <button onclick="requestDeposit()">REQUEST</button>
-
-    <div id="msg" class="msg"></div>
+    <button>REQUEST</button>
   </div>
 
   <div class="footer">© 2024 Baroud Services</div>
 
-<script>
-  /* ===== Supabase config ===== */
-  const SUPABASE_URL = "https://pqrwitolonhfbfwtsnde.supabase.co";
-  const SUPABASE_KEY = "sb_publishable_l5PtPu6xVyWq2pD6jzEYRw_CYEQ9-f_";
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-  function showMsg(text, ok=false){
-    const el = document.getElementById("msg");
-    el.className = "msg " + (ok ? "ok" : "err");
-    el.innerText = text;
-  }
-
-  async function requestDeposit(){
-    const amount = document.getElementById("amount").value;
-    const file = document.getElementById("receipt").files[0];
-
-    if(!amount || amount < 10){
-      showMsg("Minimum amount is 10$");
-      return;
-    }
-
-    if(!file){
-      showMsg("Please upload receipt image");
-      return;
-    }
-
-    const { data: { user } } = await supabase.auth.getUser();
-    if(!user){
-      showMsg("You must be logged in");
-      return;
-    }
-
-    const filePath = `${user.id}/${Date.now()}_${file.name}`;
-
-    const { error: uploadError } = await supabase.storage
-      .from("receipts")
-      .upload(filePath, file);
-
-    if(uploadError){
-      showMsg("Upload failed");
-      return;
-    }
-
-    const { error } = await supabase
-      .from("deposits")
-      .insert({
-        user_id: user.id,
-        method: "whish",
-        amount: amount,
-        receipt: filePath
-      });
-
-    if(error){
-      showMsg("Request failed");
-      return;
-    }
-
-    showMsg("Deposit request sent successfully ✅", true);
-    document.getElementById("amount").value = "";
-    document.getElementById("receipt").value = "";
-  }
-
   <script>
-function goBack(){
-  // 1) نفس الفولدر
-  const try1 = "./add-credit.html";
+    const BASE = "https://baroudservices.github.io/Baroud-service-s/";
 
-  // 2) إذا GitHub Pages على مسار مشروع (اسم الريبو)
-  const repoName = window.location.pathname.split("/")[1]; // مثال: Baroud-service-s
-  const try2 = `/${repoName}/add-credit.html`;
-
-  // جرّب الأول
-  window.location.href = try1;
-
-  // إذا ما فتح خلال لحظة، جرّب الثاني
-  setTimeout(() => {
-    // إذا بعدنا بنفس الصفحة (يعني ما تغيّر)
-    if (window.location.href.includes("wish.html")) {
-      window.location.href = try2;
+    function goBack() {
+      window.location.href = BASE + "add-credit.html";
     }
-  }, 200);
-
-  // إذا بعد كمان ما زبط، رجّع history
-  setTimeout(() => {
-    if (window.location.href.includes("wish.html")) {
-      history.back();
-    }
-  }, 600);
-}
-</script>
+  </script>
 
 </body>
 </html>

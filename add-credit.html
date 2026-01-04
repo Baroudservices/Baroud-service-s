@@ -57,6 +57,7 @@
 <script>
   // يفتح الصفحة من نفس فولدر add-credit.html (مضمون)
   function go(page) {
+    alert("Going to: " + (base + page));
     const base = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
     window.location.href = base + page;
   }

@@ -2,128 +2,160 @@
 <html lang="ar">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Add Credit - Baroud</title>
+
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
   <style>
     body{
-      font-family: system-ui, -apple-system, sans-serif;
-      background:#0b1020;
+      margin:0; padding:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background:#0b1220;
       color:#fff;
-      margin:0;
+      min-height:100vh;
     }
-    .wrap{
-      max-width:420px;
-      margin:0 auto;
-      padding: 22px 16px 40px;
+    .top{
+      display:flex;
+      justify-content:flex-start;
+      padding:18px 18px 0;
+      gap:10px;
+      align-items:center;
     }
     .back{
-      display:inline-flex;
-      gap:8px;
-      align-items:center;
       border:0;
       background:transparent;
       color:#fff;
-      font-size:18px;
+      font-size:20px;
       cursor:pointer;
       opacity:.9;
     }
+    .wrap{
+      width:min(460px, 92vw);
+      margin:0 auto;
+      padding:12px 18px 30px;
+    }
     h1{
-      margin: 18px 0 16px;
       font-size:44px;
-      line-height:1.05;
+      margin:18px 0 16px;
+      letter-spacing:.5px;
     }
     .card{
-      background: rgba(255,255,255,0.06);
-      border-radius: 28px;
-      padding: 18px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+      background:rgba(255,255,255,0.06);
+      border-radius:28px;
+      padding:16px;
+      box-shadow:0 12px 40px rgba(0,0,0,.35);
+      backdrop-filter: blur(8px);
     }
     .item{
       width:100%;
-      border:0;
-      border-radius: 22px;
-      padding: 18px 16px;
-      margin-top: 14px;
-      background: rgba(255,255,255,0.08);
-      color:#fff;
-      cursor:pointer;
       display:flex;
       align-items:center;
       gap:14px;
-      font-size:20px;
+      padding:18px;
+      margin:14px 0;
+      border-radius:22px;
+      border:0;
+      cursor:pointer;
+      background:rgba(255,255,255,0.08);
+      color:#fff;
+      font-size:22px;
+      font-weight:600;
     }
-    .item:active{ transform: scale(.99); }
+    .item:active{transform:scale(.99)}
     .icon{
-      width:46px;
-      height:46px;
-      border-radius: 14px;
-      background: rgba(255,255,255,0.08);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      overflow:hidden;
-      flex: 0 0 auto;
-    }
-    .icon img{
-      width:100%;
-      height:100%;
-      object-fit: cover;
+      width:52px;height:52px;
+      border-radius:14px;
+      object-fit:cover;
+      background:rgba(255,255,255,.10);
+      flex:0 0 auto;
     }
     .footer{
       text-align:center;
-      margin-top: 22px;
-      opacity:.55;
-      font-weight:600;
+      opacity:.65;
+      margin-top:18px;
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
+
+  <div class="top">
     <button class="back" onclick="goBack()">← رجوع</button>
+  </div>
+
+  <div class="wrap">
     <h1>Add Credit Section</h1>
 
     <div class="card">
       <button class="item" onclick="go('binance.html')">
-        <span class="icon"><img src="./assets/binance.png" alt=""></span>
+        <img class="icon" src="assets/binance.png" alt="binance">
         Binance
       </button>
 
       <button class="item" onclick="go('wish.html')">
-        <span class="icon"><img src="./assets/wish.png" alt=""></span>
+        <img class="icon" src="assets/wish.png" alt="wish">
         Whish Money
       </button>
 
       <button class="item" onclick="go('usdt-bep20.html')">
-        <span class="icon"><img src="./assets/usdt-bep20.png" alt=""></span>
+        <img class="icon" src="assets/usdt-bep20.png" alt="bep20">
         USDT BEP20
       </button>
 
       <button class="item" onclick="go('usdt-trc20.html')">
-        <span class="icon"><img src="./assets/usdt-trc20.png" alt=""></span>
+        <img class="icon" src="assets/usdt-trc20.png" alt="trc20">
         USDT TRC20
       </button>
 
       <button class="item" onclick="go('omt.html')">
-        <span class="icon"><img src="./assets/omt.png" alt=""></span>
+        <img class="icon" src="assets/omt.png" alt="omt">
         OMT Pay
       </button>
-    </div>
 
-    <div class="footer">© 2024 Baroud Services</div>
+      <div class="footer">© 2024 Baroud Services</div>
+    </div>
   </div>
 
   <script>
-    const BASE = "https://udservices.github.io/Baroud-service-s/";
+    const BASE = "https://baroudservices.github.io/Baroud-service-s/";
+
+    const supabase = window.supabase.createClient(
+      "https://pqrwitolonhfbfwtsnde.supabase.co",
+      "sb_publishable_l5PtPu6xVyWq2pD6jzEYRw_CYEQ9-f_"
+    );
 
     function go(page){
       window.location.assign(BASE + page + "?v=" + Date.now());
     }
 
-    // ✅ رجوع مضمون بدون history قديم
     function goBack(){
+      // ✅ رجوع ثابت على services.html (ما بيمسك تاريخ قديم)
       window.location.replace(BASE + "services.html?v=" + Date.now());
     }
+
+    async function guard(){
+      const { data } = await supabase.auth.getSession();
+      const user = data?.session?.user;
+      if(!user){
+        window.location.replace(BASE + "index.html?v=" + Date.now());
+        return;
+      }
+    }
+    guard();
+
+    // 🔥 حذف SW + Cache مرة واحدة
+    (async () => {
+      try{
+        if ('serviceWorker' in navigator) {
+          const regs = await navigator.serviceWorker.getRegistrations();
+          for (const reg of regs) await reg.unregister();
+        }
+        if ('caches' in window) {
+          const keys = await caches.keys();
+          for (const k of keys) await caches.delete(k);
+        }
+      }catch(e){}
+    })();
   </script>
 </body>
 </html>

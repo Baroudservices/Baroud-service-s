@@ -65,13 +65,18 @@
     }
   }
 
+  <script>
   function go(page) {
-  window.location.href = page;
-}
-  function goBack() {
-    window.location.href = "services.html";
+    // ياخد المسار الحالي تبع add-credit.html ويضيف عليه اسم الصفحة المطلوبة
+    const base = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
+    window.location.href = base + page;
   }
 
+  function goBack() {
+    const base = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
+    window.location.href = base + "services.html";
+  }
+</script>
   guard();
 </script>
 </body>

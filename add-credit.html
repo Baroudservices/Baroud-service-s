@@ -1,82 +1,120 @@
-
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Add Credit</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Add Credit</title>
 
-<style>
-body{
-  font-family:system-ui;
-  background:#0f172a;
-  color:white;
-  margin:0;
-  padding:20px;
-}
-.card{
-  max-width:420px;
-  margin:auto;
-}
-.item{
-  display:flex;
-  align-items:center;
-  gap:14px;
-  background:#1f2933;
-  padding:16px;
-  border-radius:14px;
-  margin-top:14px;
-  cursor:pointer;
-}
-.item img{
-  width:36px;
-  height:36px;
-}
-.back{
-  cursor:pointer;
-  margin-bottom:20px;
-}
-</style>
+  <style>
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      background:linear-gradient(180deg,#0b1220,#050914);
+      color:#fff;
+      min-height:100vh;
+      padding:16px;
+    }
+    .back{
+      cursor:pointer;
+      color:#fff;
+      opacity:.9;
+      font-weight:700;
+      user-select:none;
+      margin:6px 0 12px;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+    h1{
+      font-size:28px;
+      margin:10px 0 18px;
+      text-align:center;
+    }
+    .wrap{
+      max-width:520px;margin:0 auto;
+      background:rgba(255,255,255,.06);
+      border-radius:22px;
+      padding:18px;
+    }
+    .item{
+      width:100%;
+      display:flex;
+      align-items:center;
+      gap:14px;
+      padding:16px 16px;
+      margin:12px 0;
+      border:none;
+      border-radius:18px;
+      font-size:18px;
+      font-weight:800;
+      background:rgba(255,255,255,.10);
+      color:#fff;
+      cursor:pointer;
+    }
+    .icon{
+      width:46px;height:46px;border-radius:16px;
+      background:rgba(255,255,255,.08);
+      display:flex;align-items:center;justify-content:center;
+      overflow:hidden;
+      flex:0 0 46px;
+    }
+    .icon img{width:30px;height:30px;object-fit:contain}
+    .footer{
+      text-align:center;
+      color:#8ea0c4;
+      margin-top:18px;
+      font-size:13px;
+      opacity:.9;
+    }
+  </style>
 </head>
 
 <body>
 
-<div class="card">
-  <div class="back" onclick="goBack()">← رجوع</div>
-  <h2>Add Credit Section</h2>
+  <div class="back" onclick="go('services.html')">← رجوع</div>
 
-  <div class="item" onclick="go('binance.html')">
-    <img src="assets/binance.png"> Binance
+  <h1>Add Credit Section</h1>
+
+  <div class="wrap">
+    <button class="item" onclick="go('binance.html')">
+      <span class="icon"><img src="assets/binance.png" alt="binance"></span>
+      Binance
+    </button>
+
+    <button class="item" onclick="go('wish.html')">
+      <span class="icon"><img src="assets/wish.png" alt="wish"></span>
+      Whish Money
+    </button>
+
+    <button class="item" onclick="go('usdt-bep20.html')">
+      <span class="icon"><img src="assets/usdt-bep20.png" alt="bep20"></span>
+      USDT BEP20
+    </button>
+
+    <button class="item" onclick="go('usdt-trc20.html')">
+      <span class="icon"><img src="assets/usdt-trc20.png" alt="trc20"></span>
+      USDT TRC20
+    </button>
+
+    <button class="item" onclick="go('omt.html')">
+      <span class="icon"><img src="assets/omt.png" alt="omt"></span>
+      OMT Pay
+    </button>
+
+    <div class="footer">© 2024 Baroud Services</div>
   </div>
-
-  <div class="item" onclick="go('wish.html')">
-    <img src="assets/wish.png"> Whish Money
-  </div>
-
-  <div class="item">
-    <img src="assets/usdt.png"> USDT BEP20
-  </div>
-
-  <div class="item">
-    <img src="assets/usdt.png"> USDT TRC20
-  </div>
-
-  <div class="item">
-    <img src="assets/omt.png"> OMT Pay
-  </div>
-
-  <p style="text-align:center;margin-top:20px">© 2024 Baroud Services</p>
-</div>
 
 <script>
-const BASE = window.location.origin + window.location.pathname.replace(/[^\/]*$/, '');
+  function getBase(){
+    const parts = window.location.pathname.split("/").filter(Boolean);
+    const repo = parts.length ? parts[0] : "";
+    return window.location.origin + (repo ? ("/" + repo + "/") : "/");
+  }
 
-function go(page){
-  window.location.href = BASE + page;
-}
-function goBack(){
-  go("services.html");
-}
+  function go(page){
+    const url = getBase() + page + "?v=" + Date.now();
+    window.location.replace(url);
+  }
 </script>
 
 </body>

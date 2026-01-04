@@ -3,17 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Add Credit - Baroud</title>
+  <title>Add Credit Section</title>
+
+  <!-- منع كاش (مهم جداً على GitHub Pages + موبايل) -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
 
   <style>
     :root{
       --bg1:#0b1220;
       --bg2:#050914;
-      --card:rgba(255,255,255,.06);
-      --card2:rgba(255,255,255,.10);
+      --card:rgba(255,255,255,.08);
       --text:#ffffff;
       --muted:#b8c3d9;
-      --radius:22px;
     }
     *{box-sizing:border-box}
     body{
@@ -24,26 +27,24 @@
       min-height:100vh;
       padding:18px;
     }
-    .top{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      margin-bottom:18px;
-    }
-    .backTxt{
+    .back{
       cursor:pointer;
       color:#fff;
       opacity:.9;
-      font-weight:600;
+      font-weight:700;
       user-select:none;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      margin-bottom:10px;
     }
-    .title{
-      margin:0 0 14px 0;
-      font-size:32px;
-      letter-spacing:.2px;
+    h1{
+      margin:10px 0 18px 0;
+      font-size:40px;
       text-align:center;
+      font-weight:900;
+      letter-spacing:.2px;
     }
-
     .wrap{
       max-width:520px;
       margin:0 auto;
@@ -52,48 +53,37 @@
       background:rgba(0,0,0,.25);
       box-shadow:0 10px 35px rgba(0,0,0,.35);
     }
-
     .item{
       width:100%;
       display:flex;
       align-items:center;
-      gap:14px;
+      gap:16px;
       border:none;
       cursor:pointer;
       padding:18px 18px;
-      border-radius:18px;
+      border-radius:22px;
       background:rgba(255,255,255,.10);
       color:#fff;
-      font-size:18px;
-      font-weight:700;
-      margin:14px 0;
+      font-size:20px;
+      font-weight:800;
+      margin:16px 0;
       transition:.15s;
     }
     .item:active{transform:scale(.99)}
     .icon{
-      width:44px;
-      height:44px;
-      border-radius:14px;
+      width:52px;height:52px;
+      border-radius:16px;
       background:rgba(255,255,255,.08);
-      display:flex;
-      align-items:center;
-      justify-content:center;
+      display:flex;align-items:center;justify-content:center;
       overflow:hidden;
-      flex:0 0 44px;
+      flex:0 0 52px;
     }
-    .icon img{
-      width:30px;height:30px;object-fit:contain;
-    }
-    .label{
-      text-align:left;
-      flex:1;
-    }
-
+    .icon img{width:34px;height:34px;object-fit:contain}
     .footer{
       text-align:center;
-      margin-top:22px;
+      margin-top:20px;
       color:#8ea0c4;
-      font-size:13px;
+      font-size:14px;
       opacity:.9;
     }
   </style>
@@ -101,46 +91,46 @@
 
 <body>
 
-  <div class="top">
-    <div class="backTxt" onclick="go('services.html')">رجوع ←</div>
-    <div style="width:60px"></div>
-  </div>
+  <!-- زر رجوع: ممنوع history.back() -->
+  <div class="back" onclick="goNoCache('services.html')">← رجوع</div>
 
   <div class="wrap">
-    <h1 class="title">Add Credit Section</h1>
+    <h1>Add Credit Section</h1>
 
-    <button class="item" onclick="go('binance.html')">
-      <div class="icon"><img src="assets/binance.png" alt="binance"></div>
-      <div class="label">Binance</div>
+    <button class="item" onclick="goNoCache('binance.html')">
+      <span class="icon"><img src="assets/binance.png" alt="binance"></span>
+      Binance
     </button>
 
-    <button class="item" onclick="go('wish.html')">
-      <div class="icon"><img src="assets/wish.png" alt="wish"></div>
-      <div class="label">Whish Money</div>
+    <button class="item" onclick="goNoCache('wish.html')">
+      <span class="icon"><img src="assets/wish.png" alt="wish"></span>
+      Whish Money
     </button>
 
-    <button class="item" onclick="go('usdt-bep20.html')">
-      <div class="icon"><img src="assets/usdt-bep20.png" alt="bep20"></div>
-      <div class="label">USDT BEP20</div>
+    <button class="item" onclick="goNoCache('usdt-bep20.html')">
+      <span class="icon"><img src="assets/usdt-bep20.png" alt="bep20"></span>
+      USDT BEP20
     </button>
 
-    <button class="item" onclick="go('usdt-trc20.html')">
-      <div class="icon"><img src="assets/usdt-trc20.png" alt="trc20"></div>
-      <div class="label">USDT TRC20</div>
+    <button class="item" onclick="goNoCache('usdt-trc20.html')">
+      <span class="icon"><img src="assets/usdt-trc20.png" alt="trc20"></span>
+      USDT TRC20
     </button>
 
-    <button class="item" onclick="go('omt.html')">
-      <div class="icon"><img src="assets/omt.png" alt="omt"></div>
-      <div class="label">OMT Pay</div>
+    <button class="item" onclick="goNoCache('omt.html')">
+      <span class="icon"><img src="assets/omt.png" alt="omt"></span>
+      OMT Pay
     </button>
 
     <div class="footer">© 2024 Baroud Services</div>
   </div>
 
   <script>
-    // تنقّل مضبوط على GitHub Pages (بيشتغل سواء بالمجلّد أو بالروت)
-    function go(page){
-      window.location.href = new URL(page, window.location.href).href;
+    // تنقّل بدون ما يرجع للهستوري القديم + بيكسر الكاش
+    function goNoCache(page){
+      const url = new URL(page, window.location.href);
+      url.searchParams.set("v", Date.now()); // يكسر الكاش
+      window.location.replace(url.href);     // ما بيترك صفحة قديمة بالهيستوري
     }
   </script>
 

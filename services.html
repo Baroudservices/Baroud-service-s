@@ -2,108 +2,91 @@
 <html lang="ar">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Services - Baroud</title>
+
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
   <style>
-    body {
-      font-family: system-ui, -apple-system, sans-serif;
-      background: #0b1020;
-      color: #fff;
-      margin: 0;
-      padding: 0;
-    }
-
-    .wrap{
-      max-width: 420px;
-      margin: 0 auto;
-      padding: 26px 16px 90px;
-    }
-
-    .card{
-      background: rgba(255,255,255,0.06);
-      border-radius: 22px;
-      padding: 18px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
-    }
-
-    h2{
-      margin: 6px 0 14px;
-      text-align: center;
-      font-size: 30px;
-      letter-spacing: .5px;
-    }
-
-    #welcome{
-      text-align:center;
-      opacity:.9;
-      margin-bottom: 14px;
-      font-size: 16px;
-    }
-
-    button{
-      width: 100%;
-      padding: 16px;
-      margin-top: 12px;
-      border: 0;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.08);
-      color: #fff;
-      font-size: 18px;
-      cursor: pointer;
-    }
-    button:active{ transform: scale(.99); }
-
-    #msg{
-      margin-top: 14px;
-      text-align:center;
-      font-weight: 700;
-      opacity: .9;
-    }
-
-    #addCreditBtn{
-      position: fixed;
-      right: 18px;
-      bottom: 18px;
-      width: 62px;
-      height: 62px;
-      border-radius: 50%;
-      background: #000;
-      color: #fff;
-      font-size: 34px;
+    body{
+      margin:0; padding:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background:#0b1220;
+      color:#fff;
+      min-height:100vh;
       display:flex;
       align-items:center;
       justify-content:center;
-      box-shadow: 0 12px 28px rgba(0,0,0,.45);
     }
+    .wrap{
+      width:min(420px, 92vw);
+      padding:22px;
+    }
+    .card{
+      background:rgba(255,255,255,0.06);
+      border-radius:26px;
+      padding:26px 18px;
+      box-shadow:0 12px 40px rgba(0,0,0,.35);
+      backdrop-filter: blur(8px);
+      text-align:center;
+    }
+    h1{margin:8px 0 6px; font-size:34px; letter-spacing:0.5px;}
+    #welcome{opacity:.85; margin-bottom:16px}
+    .btn{
+      width:100%;
+      border:0;
+      border-radius:18px;
+      padding:16px 14px;
+      margin:10px 0;
+      font-size:18px;
+      cursor:pointer;
+      background:rgba(255,255,255,0.10);
+      color:#fff;
+    }
+    .btn:active{transform:scale(.99)}
+    #msg{margin-top:14px; opacity:.9}
+
+    .fab{
+      position:fixed;
+      right:18px;
+      bottom:18px;
+      width:56px;height:56px;
+      border-radius:50%;
+      border:0;
+      background:rgba(255,255,255,0.12);
+      color:#fff;
+      font-size:30px;
+      cursor:pointer;
+      box-shadow:0 12px 30px rgba(0,0,0,.35);
+    }
+    .fab:active{transform:scale(.98)}
   </style>
 </head>
 
 <body>
-  <button id="addCreditBtn" onclick="goToAddCredit()">+</button>
-
   <div class="wrap">
     <div class="card">
-      <h2>Baroud Services</h2>
+      <h1>Baroud Services</h1>
       <div id="welcome">...</div>
 
-      <a href="https://wa.me/96170385390" target="_blank" style="text-decoration:none;">
-        <button type="button">WhatsApp</button>
-      </a>
+      <button class="btn" onclick="openWhats()">WhatsApp</button>
+      <button class="btn" onclick="alert('Service 1')">Service 1</button>
+      <button class="btn" onclick="alert('Service 2')">Service 2</button>
 
-      <button type="button" onclick="alert('Service 1')">Service 1</button>
-      <button type="button" onclick="alert('Service 2')">Service 2</button>
-
-      <button type="button" onclick="logoutUser()">Logout</button>
+      <button class="btn" onclick="go('add-credit.html')">Add Credit</button>
+      <button class="btn" onclick="logoutUser()">Logout</button>
 
       <div id="msg">...</div>
     </div>
   </div>
 
-  <script>
-    const BASE = "https://udservices.github.io/Baroud-service-s/";
+  <button class="fab" onclick="hardRefresh()" title="Refresh">↻</button>
 
+  <script>
+    // ✅ رابط موقعك (GitHub Pages)
+    const BASE = "https://baroudservices.github.io/Baroud-service-s/";
+
+    // ✅ Supabase
     const supabase = window.supabase.createClient(
       "https://pqrwitolonhfbfwtsnde.supabase.co",
       "sb_publishable_l5PtPu6xVyWq2pD6jzEYRw_CYEQ9-f_"
@@ -111,6 +94,25 @@
 
     const welcomeEl = document.getElementById("welcome");
     const msgEl = document.getElementById("msg");
+
+    function openWhats(){
+      window.open("https://wa.me/96170385398", "_blank");
+    }
+
+    // ✅ تنقّل مع كسر كاش
+    function go(page){
+      window.location.assign(BASE + page + "?v=" + Date.now());
+    }
+
+    // ✅ Refresh قوي
+    function hardRefresh(){
+      window.location.replace(BASE + "services.html?v=" + Date.now());
+    }
+
+    async function logoutUser(){
+      await supabase.auth.signOut();
+      window.location.replace(BASE + "index.html?v=" + Date.now());
+    }
 
     async function guard(){
       const { data } = await supabase.auth.getSession();
@@ -120,55 +122,25 @@
         window.location.replace(BASE + "index.html?v=" + Date.now());
         return;
       }
-
-      welcomeEl.innerText = "أهلاً " + (user.email || "");
-      msgEl.innerText = "Ready ✅";
+      welcomeEl.textContent = "أهلاً " + user.email;
+      msgEl.textContent = "Ready ✅";
     }
 
-    async function logoutUser(){
-      await supabase.auth.signOut();
-      window.location.replace(BASE + "index.html?v=" + Date.now());
-    }
+    guard();
 
-    function goToAddCredit(){
-      window.location.assign(BASE + "add-credit.html?v=" + Date.now());
-    }
-
-    // ✅ حل جذري ضد النسخة القديمة:
-    // - امسح Service Workers و الكاش كل مرة تفتح الصفحة
-    (async function killCache(){
+    // 🔥 الحل الجذري: حذف Service Worker + Cache
+    (async () => {
       try{
         if ('serviceWorker' in navigator) {
           const regs = await navigator.serviceWorker.getRegistrations();
-          for (const r of regs) await r.unregister();
+          for (const reg of regs) await reg.unregister();
         }
-        if (window.caches) {
+        if ('caches' in window) {
           const keys = await caches.keys();
           for (const k of keys) await caches.delete(k);
         }
       }catch(e){}
     })();
-
-    guard();
-  <script>
-/* 🔥 DESTROY SERVICE WORKER & CACHE ONCE AND FOR ALL */
-(async () => {
-  if ('serviceWorker' in navigator) {
-    const regs = await navigator.serviceWorker.getRegistrations();
-    for (const reg of regs) {
-      await reg.unregister();
-    }
-  }
-
-  if ('caches' in window) {
-    const names = await caches.keys();
-    for (const name of names) {
-      await caches.delete(name);
-    }
-  }
-
-  console.log("Service Worker & Cache DESTROYED");
-})();
-</script>
+  </script>
 </body>
 </html>

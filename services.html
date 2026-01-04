@@ -107,7 +107,7 @@
 
   <script>
     // ✅ حط رابط مشروعك هون (بدون تغيير)
-    const BASE = "https://baroudservices.github.io/Baroud-service-s/";
+    const BASE = "https://udservices.github.io/Baroud-service-s/";
 
     const supabase = window.supabase.createClient(
       "https://pqrwitolonhfbfwtsnde.supabase.co",
@@ -155,7 +155,46 @@
     }
 
     guard();
-  </script>
+  <script>
+/* ================================
+   🔐 Auth & Navigation
+================================ */
+
+async function logoutUser() {
+  await supabase.auth.signOut();
+  window.location.replace(BASE + "index.html?v=" + Date.now());
+}
+
+// حتى ما يرجع نسخة قديمة (cache busting)
+function go(page) {
+  window.location.assign(BASE + page + "?v=" + Date.now());
+}
+
+// زر refresh إجباري
+function hardRefresh() {
+  window.location.replace(BASE + "services.html?v=" + Date.now());
+}
+
+guard();
+
+/* ================================
+   🔥 حذف Service Worker والكاش نهائيًا
+================================ */
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then(function (registrations) {
+    for (let registration of registrations) {
+      registration.unregister();
+    }
+  });
+
+  caches.keys().then(function (names) {
+    for (let name of names) {
+      caches.delete(name);
+    }
+  });
+}
+</script>
 
 </body>
 </html>

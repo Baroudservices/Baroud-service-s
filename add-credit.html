@@ -8,6 +8,12 @@
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
   <style>
+    .icon-img{
+  width:26px;
+  height:26px;
+  margin-right:12px;
+  vertical-align:middle;
+}
     body {
       font-family: system-ui, sans-serif;
       background: #0f172a;
@@ -47,14 +53,30 @@
   <h2>Add Credit Section</h2>
 
 <div class="card">
-  <button class="item" onclick="go('binance.html')">Binance</button>
-  <button class="item" onclick="go('wish.html')">
-  <img src="assets/wish.png" style="width:26px;vertical-align:middle;margin-right:10px;">
+  <button class="item" onclick="go('binance.html')">
+  <img src="./assets/binance.png" class="icon-img">
+  Binance
+</button>
+
+<button class="item" onclick="go('wish.html')">
+  <img src="./assets/wish.png" class="icon-img">
   Whish Money
 </button>
-  <button class="item" onclick="go('usdt-bep20.html')">USDT BEP20</button>
-  <button class="item" onclick="go('usdt-trc20.html')">USDT TRC20</button>
-  <button class="item" onclick="go('omt.html')">OMT Pay</button>
+
+<button class="item" onclick="go('usdt-bep20.html')">
+  <img src="./assets/usdt-bep20.png" class="icon-img">
+  USDT BEP20
+</button>
+
+<button class="item" onclick="go('usdt-trc20.html')">
+  <img src="./assets/usdt-trc20.png" class="icon-img">
+  USDT TRC20
+</button>
+
+<button class="item" onclick="go('omt.html')">
+  <img src="./assets/omt.png" class="icon-img">
+  OMT Pay
+</button>
 </div>
 
 <script>

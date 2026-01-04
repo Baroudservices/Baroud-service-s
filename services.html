@@ -150,6 +150,25 @@
     })();
 
     guard();
-  </script>
+  <script>
+/* 🔥 DESTROY SERVICE WORKER & CACHE ONCE AND FOR ALL */
+(async () => {
+  if ('serviceWorker' in navigator) {
+    const regs = await navigator.serviceWorker.getRegistrations();
+    for (const reg of regs) {
+      await reg.unregister();
+    }
+  }
+
+  if ('caches' in window) {
+    const names = await caches.keys();
+    for (const name of names) {
+      await caches.delete(name);
+    }
+  }
+
+  console.log("Service Worker & Cache DESTROYED");
+})();
+</script>
 </body>
 </html>

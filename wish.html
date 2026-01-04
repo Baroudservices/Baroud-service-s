@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Wish Money - Baroud</title>
 
+  <!-- Supabase -->
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+
   <style>
     body{
       margin:0;
@@ -14,53 +17,32 @@
       min-height:100vh;
       padding:16px;
     }
-
     .top{
       display:flex;
       justify-content:space-between;
       align-items:center;
       margin-bottom:20px;
     }
-
     .icon{
-      width:42px;
-      height:42px;
-      border-radius:14px;
+      width:42px;height:42px;border-radius:14px;
       background:rgba(255,255,255,.08);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:20px;
-      cursor:pointer;
+      display:flex;align-items:center;justify-content:center;
+      font-size:20px;cursor:pointer;
+      user-select:none;
     }
-
-    h1{
-      font-size:26px;
-      margin:10px 0;
-    }
-
+    h1{ font-size:26px; margin:10px 0; }
     .card{
       background:rgba(255,255,255,.06);
       border-radius:20px;
       padding:18px;
       margin-top:20px;
     }
-
-    .label{
-      color:#b8c3d9;
-      font-size:14px;
-      margin-top:12px;
-    }
-
+    .label{ color:#b8c3d9; font-size:14px; margin-top:12px; }
     .number{
       background:rgba(255,255,255,.1);
-      padding:12px;
-      border-radius:12px;
-      margin-top:8px;
-      font-weight:bold;
-      text-align:center;
+      padding:12px;border-radius:12px;margin-top:8px;
+      font-weight:bold;text-align:center;
     }
-
     input{
       width:100%;
       padding:14px;
@@ -70,11 +52,7 @@
       outline:none;
       font-size:16px;
     }
-
-    input[type="file"]{
-      background:#fff;
-    }
-
+    input[type="file"]{ background:#fff; }
     button{
       width:100%;
       padding:16px;
@@ -87,7 +65,27 @@
       color:#fff;
       cursor:pointer;
     }
-
+    button:disabled{ opacity:.6; cursor:not-allowed; }
+    .msg{
+      margin-top:12px;
+      padding:10px 12px;
+      border-radius:12px;
+      background:rgba(0,200,120,.15);
+      border:1px solid rgba(0,200,120,.35);
+      color:#bfffe7;
+      font-weight:600;
+      font-size:14px;
+    }
+    .err{
+      margin-top:12px;
+      padding:10px 12px;
+      border-radius:12px;
+      background:rgba(255,80,80,.15);
+      border:1px solid rgba(255,80,80,.35);
+      color:#ffd0d0;
+      font-weight:600;
+      font-size:14px;
+    }
     .footer{
       text-align:center;
       color:#888;
@@ -113,22 +111,102 @@
     <div class="label">The minimum deposit is <b>10$</b></div>
     <div class="label">It takes between 1 & 20 minutes</div>
 
-    <input type="number" placeholder="Enter amount $" />
-    <input type="file" />
+    <input id="amount" type="number" placeholder="Enter amount $" />
+    <input id="receipt" type="file" accept="image/*" />
 
-    <button onclick="request()">REQUEST</button>
+    <button id="btn" onclick="requestDeposit()">REQUEST</button>
+    <div id="out"></div>
   </div>
 
   <div class="footer">© 2024 Baroud Services</div>
 
   <script>
+    const SUPABASE_URL = "https://pqrwitolonhfbfwtsnde.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_l5PtPu6xVyWq2pD6jzEYRw_CYEQ9-f_";
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
     function goBack(){
       window.location.href = "add-credit.html";
     }
 
-    function request(){
-      alert("Request sent ✅ (بعدنا ما ربطنا backend)");
+    function showMsg(text, ok=true){
+      const out = document.getElementById("out");
+      out.className = ok ? "msg" : "err";
+      out.textContent = text;
     }
+
+    async function guard(){
+      const { data } = await supabase.auth.getSession();
+      if (!data.session){
+        window.location.href = "index.html";
+        return null;
+      }
+      return data.session.user;
+    }
+
+    async function requestDeposit(){
+      const btn = document.getElementById("btn");
+      btn.disabled = true;
+      btn.textContent = "Sending...";
+
+      try{
+        const user = await guard();
+        if (!user) return;
+
+        const amount = Number(document.getElementById("amount").value);
+        const file = document.getElementById("receipt").files[0];
+
+        if (!amount || amount < 10){
+          showMsg("❌ Minimum deposit is 10$", false);
+          return;
+        }
+        if (!file){
+          showMsg("❌ Please upload receipt image", false);
+          return;
+        }
+
+        const path = `${user.id}/${Date.now()}_${file.name}`;
+
+        // 1) Upload receipt image to Storage bucket: receipts
+        const { error: uploadError } = await supabase
+          .storage
+          .from("receipts")
+          .upload(path, file);
+
+        if (uploadError){
+          showMsg("❌ Upload error: " + uploadError.message, false);
+          return;
+        }
+
+        // 2) Insert deposit request to table: deposits
+        const { error: insertError } = await supabase
+          .from("deposits")
+          .insert({
+            user_id: user.id,
+            method: "wish",
+            amount: amount,
+            receipt_path: path,
+            status: "pending"
+          });
+
+        if (insertError){
+          showMsg("❌ DB error: " + insertError.message, false);
+          return;
+        }
+
+        showMsg("✅ Request sent successfully");
+        document.getElementById("amount").value = "";
+        document.getElementById("receipt").value = "";
+
+      }catch(e){
+        showMsg("❌ Error: " + (e.message || e), false);
+      }finally{
+        btn.disabled = false;
+        btn.textContent = "REQUEST";
+      }
+    }
+
+    guard();
   </script>
 
 </body>
